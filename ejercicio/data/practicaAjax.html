@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Demo Jquery</title>
+  <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+  </head>
+  <body>
+      <h1>Ejemplo de Uso de Jquery</h1>
+      <p id="mensajeFinal">
+      </p>
+      <button type="submit" id="obtenerInformacion">Obtener información</button>
+      <button type="submit" id="limpiarInformacion">Limpiar información</button>
+  </body>
+  <script>
+    $(document).ready(function() {
+      var archivoCSV = "data/Listado-Instituciones-Educativas-distribuidas-por-zona-distrito-y-circuito.csv";
+      $("#obtenerInformacion").click(function() {
+        $.ajax({
+          type: "GET",
+          url: archivoCSV,
+          dataType: 'text' // Cambia de 'json' a 'text' para cargar un archivo CSV
+        }).then(function(data) {
+          var lineas = data.split('\n');
+          for (var i = 0; i < lineas.length; i++) {
+            var datos = lineas[i].split('|');
+            var codigo = datos[0];
+            var nombre = datos[1];
+            var provincia = datos[2];
+            $('#mensajeFinal').append("<p> " +"Codigo AMIE: \n"+ "\n"+codigo  + nombre + provincia+ "</p>");
+          }
+        });
+      });
+
+      /*
+       $("#obtenerInformacion").click(function() {
+        $.ajax({
+          type: "GET",
+          url: archivoCSV,
+          dataType: 'text'
+        }).then(function(data) {
+          var lineas = data.split('\n');
+          var encabezados = lineas[0].split('|'); // Obtener los encabezados desde la primera línea
+
+          for (var i = 1; i < lineas.length; i++) {
+            var datos = lineas[i].split('|');
+
+            var objeto = {};
+            for (var j = 0; j < encabezados.length; j++) {
+              objeto[encabezados[j]] = datos[j];
+            }
+
+            var objetoString = Object.values(objeto).join(" | ");
+            $('#mensajeFinal').append("<p>" + objetoString + "</p>");
+          }
+        });
+      });
+      */
+
+      
+      $( "#limpiarInformacion" ).click(function() {
+          $('#mensajeFinal').empty();
+      });
+    });
+  </script>
+</html>
